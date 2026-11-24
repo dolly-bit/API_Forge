@@ -9,4 +9,5 @@ import java.util.UUID;
 public interface UpstreamRepository extends JpaRepository<Upstream, UUID> {
     List<Upstream> findAllByApplicationIdOrderByCreatedAtDesc(UUID applicationId);
     Optional<Upstream> findByIdAndApplicationId(UUID id, UUID applicationId);
+    boolean existsByApplicationIdAndName(UUID applicationId, String name);
 }
