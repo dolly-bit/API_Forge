@@ -2,6 +2,7 @@ package com.apiforge.route;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import org.springframework.http.HttpStatus;
@@ -62,9 +63,5 @@ public class ApiRouteController {
             @Size(max = 500) String upstreamPathPrefix
     ) { }
 
-    public record UpdateRouteStatusRequest(RouteStatus status) {
-        public UpdateRouteStatusRequest {
-            if (status == null) throw new IllegalArgumentException("status is required");
-        }
-    }
+    public record UpdateRouteStatusRequest(@NotNull RouteStatus status) { }
 }
