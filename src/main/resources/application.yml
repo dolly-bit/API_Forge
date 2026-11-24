@@ -28,6 +28,11 @@ spring:
 server:
   port: ${SERVER_PORT:8080}
   shutdown: graceful
+security:
+  jwt:
+    # Development-only fallback. Always set JWT_SECRET to a unique random value outside local development.
+    secret: ${JWT_SECRET:local-development-only-secret-change-this-before-deployment-2026}
+    access-token-ttl: ${JWT_ACCESS_TOKEN_TTL:PT15M}
 management:
   endpoints:
     web:
@@ -47,4 +52,4 @@ info:
   app:
     name: APIForge
     description: API access and usage platform
-    version: 0.1.0
+    version: 0.2.0
