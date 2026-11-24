@@ -22,11 +22,14 @@ The platform supports account registration and login, stateless JWT access token
 
 Prerequisites: JDK 21, Docker Engine/Desktop, and Maven 3.9+.
 
-Start infrastructure:
+Copy the example environment file, then start infrastructure. Docker Compose reads the resulting `.env` file automatically:
 
-```bash
+```powershell
+Copy-Item .env.example .env
 docker compose up -d
 ```
+
+Review the port values first if those ports are already used on your machine.
 
 Set the environment variables from `.env.example` in your shell or IDE run configuration, then start the API:
 
