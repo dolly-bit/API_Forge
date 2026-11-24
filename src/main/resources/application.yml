@@ -28,6 +28,10 @@ spring:
 server:
   port: ${SERVER_PORT:8080}
   shutdown: graceful
+apiforge:
+  gateway:
+    # Comma-separated exact hostnames. Empty means no upstream destinations are permitted.
+    allowed-hosts: ${GATEWAY_ALLOWED_HOSTS:}
 security:
   jwt:
     # Development-only fallback. Always set JWT_SECRET to a unique random value outside local development.
