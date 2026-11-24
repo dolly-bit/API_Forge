@@ -4,9 +4,9 @@ APIForge is a developer-facing API access platform. It is being built in milesto
 
 ## Current milestone
 
-**Phase 2 — Authentication, authorization, and API keys (implementation branch)**
+**Phase 3 — API gateway and upstream routing (in progress)**
 
-The platform supports account registration and login, stateless JWT access tokens, role-based authorization, application ownership, and application-scoped API key creation, listing, validation, and revocation.
+Phase 2 is merged into `main`: the platform supports account registration and login, stateless JWT access tokens, role-based authorization, application ownership, and application-scoped API key creation, listing, validation, and revocation. Phase 3 adds a bounded reverse-proxy gateway with API-key authentication and owner-managed upstream routes.
 
 ## Stack
 
