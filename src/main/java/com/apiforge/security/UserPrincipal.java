@@ -14,14 +14,15 @@ import java.util.UUID;
 public record UserPrincipal(
         UUID id,
         String email,
+        String displayName,
         String passwordHash,
         UserRole role,
         UserStatus status
 ) implements UserDetails {
 
     public static UserPrincipal from(PlatformUser user) {
-        return new UserPrincipal(user.getId(), user.getEmail(), user.getPasswordHash(),
-                user.getRole(), user.getStatus());
+        return new UserPrincipal(user.getId(), user.getEmail(), user.getDisplayName(),
+                user.getPasswordHash(), user.getRole(), user.getStatus());
     }
 
     @Override
