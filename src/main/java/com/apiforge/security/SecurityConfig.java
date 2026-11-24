@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -40,16 +39,11 @@ public class SecurityConfig {
     }
 
     @Bean
-    AuthenticationProvider authenticationProvider(
+    AuthenticationManager authenticationManager(
             UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
         provider.setPasswordEncoder(passwordEncoder);
-        return provider;
-    }
-
-    @Bean
-    AuthenticationManager authenticationManager(AuthenticationProvider authenticationProvider) {
-        return new ProviderManager(authenticationProvider);
+        return new ProviderManager(provider);
     }
 
     @Bean
@@ -88,13 +82,11 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(
             HttpSecurity http,
-            AuthenticationProvider authenticationProvider,
             JwtAuthenticationConverter jwtAuthenticationConverter) throws Exception {
         return http
                 .csrf(csrf -> csrf.disable())
                 .formLogin(form -> form.disable())
                 .httpBasic(basic -> basic.disable())
-                .authenticationProvider(authenticationProvider)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/auth/**", "/api/v1/health",
