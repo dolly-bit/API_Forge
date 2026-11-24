@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
@@ -55,6 +56,7 @@ public class AuthService {
     @Transactional
     public AuthResponse register(RegisterRequest request) {
         String email = normalizeEmail(request.email());
+        validateBcryptPasswordLength(request.password());
         if (users.existsByEmailIgnoreCase(email)) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "An account with this email already exists");
         }
@@ -91,7 +93,14 @@ public class AuthService {
                 JwsHeader.with(MacAlgorithm.HS256).build(), claims)).getTokenValue();
 
         return new AuthResponse(token, "Bearer", accessTokenTtlSeconds,
-                new AuthResponse.UserSummary(user.id(), user.email(), "", user.role().name()));
+                new AuthResponse.UserSummary(user.id(), user.email(), user.displayName(), user.role().name()));
+    }
+
+    private void validateBcryptPasswordLength(String password) {
+        if (password.getBytes(StandardCharsets.UTF_8).length > 72) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Password must not exceed 72 UTF-8 bytes");
+        }
     }
 
     private String normalizeEmail(String email) {
