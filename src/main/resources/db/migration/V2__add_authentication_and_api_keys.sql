@@ -15,7 +15,7 @@ CREATE TABLE api_keys (
     application_id UUID NOT NULL REFERENCES applications(id),
     name VARCHAR(120) NOT NULL,
     key_prefix VARCHAR(24) NOT NULL,
-    key_hash CHAR(64) NOT NULL UNIQUE,
+    key_hash VARCHAR(64) NOT NULL UNIQUE,
     status VARCHAR(20) NOT NULL DEFAULT 'ACTIVE'
         CHECK (status IN ('ACTIVE', 'REVOKED')),
     expires_at TIMESTAMPTZ,
