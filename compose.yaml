@@ -7,7 +7,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-apiforge}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-local_dev_password}
     ports:
-      - "5432:5432"
+      - "${DB_PORT:-5432}:5432"
     volumes:
       - apiforge_postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -19,7 +19,7 @@ services:
     image: redis:7-alpine
     container_name: apiforge-redis
     ports:
-      - "6379:6379"
+      - "${REDIS_PORT:-6379}:6379"
     command: ["redis-server", "--appendonly", "yes"]
     volumes:
       - apiforge_redis_data:/data

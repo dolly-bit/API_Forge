@@ -8,6 +8,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.util.List;
@@ -43,6 +44,21 @@ public class GlobalExceptionHandler {
             HttpMessageNotReadableException exception, HttpServletRequest request) {
         return response(HttpStatus.BAD_REQUEST, "MALFORMED_REQUEST",
                 "Request body is missing or malformed", request, List.of());
+    }
+
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<ApiError> handleStatusException(
+            ResponseStatusException exception, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.valueOf(exception.getStatusCode().value());
+        String code = switch (status) {
+            case CONFLICT -> "RESOURCE_CONFLICT";
+            case UNAUTHORIZED -> "UNAUTHENTICATED";
+            case FORBIDDEN -> "FORBIDDEN";
+            case NOT_FOUND -> "NOT_FOUND";
+            default -> "REQUEST_REJECTED";
+        };
+        return response(status, code, exception.getReason() == null ? "Request rejected" : exception.getReason(),
+                request, List.of());
     }
 
     @ExceptionHandler(Exception.class)
