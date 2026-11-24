@@ -44,7 +44,7 @@ class SecurityConfigTest {
                 JwsHeader.with(MacAlgorithm.HS256).build(), claims)).getTokenValue();
 
         Jwt decoded = decoder.decode(token);
-        assertEquals("apiforge", decoded.getIssuer().toString());
+        assertEquals("apiforge", decoded.getClaimAsString("iss"));
         assertEquals(claims.getSubject(), decoded.getSubject());
         assertEquals(List.of("USER"), decoded.getClaimAsStringList("roles"));
     }
