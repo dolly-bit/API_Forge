@@ -87,15 +87,18 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain securityFilterChain(
-            HttpSecurity http, JwtAuthenticationConverter jwtAuthenticationConverter) throws Exception {
+            HttpSecurity http,
+            AuthenticationProvider authenticationProvider,
+            JwtAuthenticationConverter jwtAuthenticationConverter) throws Exception {
         return http
                 .csrf(csrf -> csrf.disable())
                 .formLogin(form -> form.disable())
                 .httpBasic(basic -> basic.disable())
+                .authenticationProvider(authenticationProvider)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/auth/**", "/api/v1/health",
-                                "/actuator/health", "/actuator/health/**").permitAll()
+                                "/actuator/health", "/actuator/health/**", "/actuator/info").permitAll()
                         .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth -> oauth.jwt(jwt ->
