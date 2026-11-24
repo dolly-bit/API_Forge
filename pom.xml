@@ -15,7 +15,7 @@
     <description>API access, routing, rate limiting, and usage platform</description>
     <properties>
         <java.version>21</java.version>
-        <testcontainers.version>1.21.3</testcontainers.version>
+        <testcontainers.version>1.21.4</testcontainers.version>
     </properties>
     <dependencyManagement>
         <dependencies>
