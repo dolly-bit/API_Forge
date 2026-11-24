@@ -49,6 +49,11 @@ public class ApiRouteService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "HTTP method is not supported");
         }
         String normalizedPrefix = normalizePathPrefix(upstreamPathPrefix);
+        if (routes.existsByApplicationIdAndRouteKeyAndHttpMethod(
+                applicationId, normalizedKey, normalizedMethod)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    "A route with this key and HTTP method already exists for the application");
+        }
 
         ApiRoute saved = routes.save(new ApiRoute(applicationId, upstreamId, normalizedKey,
                 normalizedMethod, normalizedPrefix));
@@ -104,7 +109,7 @@ public class ApiRouteService {
         if (value == null || value.isBlank() || "/".equals(value.trim())) return "";
         String prefix = value.trim();
         if (!prefix.startsWith("/") || prefix.contains("?") || prefix.contains("#")
-                || prefix.contains("\\\\") || prefix.contains("/../")
+                || prefix.contains("\\") || prefix.contains("/../")
                 || prefix.endsWith("/..") || prefix.contains("/./")) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Upstream path prefix is invalid");
         }
