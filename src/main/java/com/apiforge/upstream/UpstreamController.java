@@ -2,6 +2,7 @@ package com.apiforge.upstream;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -58,9 +59,5 @@ public class UpstreamController {
             @NotBlank @Size(max = 500) String baseUrl
     ) { }
 
-    public record UpdateUpstreamStatusRequest(UpstreamStatus status) {
-        public UpdateUpstreamStatusRequest {
-            if (status == null) throw new IllegalArgumentException("status is required");
-        }
-    }
+    public record UpdateUpstreamStatusRequest(@NotNull UpstreamStatus status) { }
 }
