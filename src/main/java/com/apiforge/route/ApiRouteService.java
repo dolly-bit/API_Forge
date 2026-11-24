@@ -20,7 +20,7 @@ import java.util.UUID;
 public class ApiRouteService {
 
     private static final Set<String> SUPPORTED_METHODS =
-            Set.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD);
+            Set.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD");
 
     private final ApiRouteRepository routes;
     private final UpstreamRepository upstreams;
