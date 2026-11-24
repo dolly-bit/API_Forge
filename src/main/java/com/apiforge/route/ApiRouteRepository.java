@@ -9,6 +9,8 @@ import java.util.UUID;
 public interface ApiRouteRepository extends JpaRepository<ApiRoute, UUID> {
     List<ApiRoute> findAllByApplicationIdAndUpstreamIdOrderByCreatedAtDesc(
             UUID applicationId, UUID upstreamId);
+    boolean existsByApplicationIdAndRouteKeyAndHttpMethod(
+            UUID applicationId, String routeKey, String httpMethod);
     Optional<ApiRoute> findByIdAndApplicationIdAndUpstreamId(
             UUID id, UUID applicationId, UUID upstreamId);
 }
