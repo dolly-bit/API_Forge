@@ -22,14 +22,14 @@ This repository is currently being initialized. Phase 1 establishes the applicat
 
 ## Local development
 
-Prerequisites: JDK 21, Docker Engine/Desktop, and Maven (or use the Maven wrapper once committed).
+Prerequisites: JDK 21, Docker Engine/Desktop, and Maven 3.9+.
 
 ```bash
 docker compose up -d
-./mvnw spring-boot:run
+mvn spring-boot:run
 ```
 
-On Windows PowerShell, use `./mvnw.cmd spring-boot:run`.
+Run the test suite with `mvn verify`.
 
 The application will expose its API on `http://localhost:8080`. Health checks are available at `/actuator/health` and readiness at `/actuator/health/readiness`.
 
