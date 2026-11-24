@@ -26,6 +26,17 @@ This phase is deliberately a bounded reverse-proxy implementation, not a general
 - Restrict upstream destinations with a configurable host allowlist. Do not create an unrestricted proxy or permit arbitrary internal/private destinations by default.
 - Unit and PostgreSQL integration tests for ownership, validation, uniqueness, and lifecycle.
 
+### 3A implementation notes
+
+Management endpoints are JWT-protected:
+
+- `POST/GET /api/v1/applications/{applicationId}/upstreams`
+- `PATCH /api/v1/applications/{applicationId}/upstreams/{upstreamId}/status`
+- `POST/GET /api/v1/applications/{applicationId}/upstreams/{upstreamId}/routes`
+- `PATCH /api/v1/applications/{applicationId}/upstreams/{upstreamId}/routes/{routeId}/status`
+
+Upstream destinations require HTTPS and an exact hostname in `GATEWAY_ALLOWED_HOSTS` (comma-separated). An empty allowlist denies all upstream creation. IP literals, localhost, and common local-only host suffixes are rejected. Route uniqueness is enforced per application, route key, and HTTP method; PostgreSQL also enforces that a route's upstream belongs to the same application.
+
 ### 3B — Gateway authentication and proxying
 - Stateless API-key authentication at the gateway boundary using `X-API-Key`.
 - Resolve key -> application -> active route; reject invalid, expired, revoked, suspended, or cross-application access.
