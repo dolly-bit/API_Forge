@@ -72,6 +72,7 @@ public class ApiKey {
     public UUID getApplicationId() { return applicationId; }
     public String getName() { return name; }
     public String getKeyPrefix() { return keyPrefix; }
+    public String getKeyHash() { return keyHash; }
     public ApiKeyStatus getStatus() { return status; }
     public Instant getExpiresAt() { return expiresAt; }
     public Instant getLastUsedAt() { return lastUsedAt; }
