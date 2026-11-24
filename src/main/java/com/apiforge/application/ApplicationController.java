@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,7 +30,7 @@ public class ApplicationController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ApplicationResponse create(@Valid @RequestBody CreateApplicationRequest request,
-                                      Jwt jwt) {
+                                      @AuthenticationPrincipal Jwt jwt) {
         UUID ownerId = UUID.fromString(jwt.getSubject());
         PlatformApplication application = applications.save(new PlatformApplication(
                 ownerId, request.name().trim(), request.description()));
@@ -37,7 +38,7 @@ public class ApplicationController {
     }
 
     @GetMapping
-    public List<ApplicationResponse> list(Jwt jwt) {
+    public List<ApplicationResponse> list(@AuthenticationPrincipal Jwt jwt) {
         UUID ownerId = UUID.fromString(jwt.getSubject());
         return applications.findAllByOwnerUserIdOrderByCreatedAtDesc(ownerId)
                 .stream().map(ApplicationResponse::from).toList();
