@@ -29,8 +29,12 @@ public class UpstreamService {
     @Transactional
     public UpstreamResponse create(UUID ownerId, UUID applicationId, String name, String baseUrl) {
         requireActiveOwnedApplication(ownerId, applicationId);
+        String normalizedName = name.trim();
+        if (upstreams.existsByApplicationIdAndName(applicationId, normalizedName)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "An upstream with this name already exists");
+        }
         String normalizedUrl = urlPolicy.validateAndNormalize(baseUrl);
-        Upstream saved = upstreams.save(new Upstream(applicationId, name.trim(), normalizedUrl));
+        Upstream saved = upstreams.save(new Upstream(applicationId, normalizedName, normalizedUrl));
         return UpstreamResponse.from(saved);
     }
 
