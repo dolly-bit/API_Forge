@@ -93,6 +93,15 @@ Registration and login return a short-lived JWT. Passwords are hashed with BCryp
 
 An API key is returned in plaintext only when created. APIForge stores only its SHA-256 hash and a short display prefix. The key cannot be retrieved later. Expired and revoked keys fail validation. API keys are scoped to an application owned by the authenticated user.
 
+### Upstreams and routes (Phase 3A)
+
+- `POST/GET /api/v1/applications/{applicationId}/upstreams` — create and list upstream services.
+- `PATCH /api/v1/applications/{applicationId}/upstreams/{upstreamId}/status` — enable or disable an upstream.
+- `POST/GET /api/v1/applications/{applicationId}/upstreams/{upstreamId}/routes` — create and list method-aware routes.
+- `PATCH /api/v1/applications/{applicationId}/upstreams/{upstreamId}/routes/{routeId}/status` — enable or disable a route.
+
+Set `GATEWAY_ALLOWED_HOSTS` to a comma-separated list of exact hostnames (for example, `api.example.com,files.example.com`). Upstream URLs must use HTTPS, and an empty allowlist rejects every destination. This is a configuration-time allowlist; Phase 3B must additionally validate resolved destination IPs at connection time to defend against DNS rebinding and private-network resolution.
+
 ## Security configuration
 
 Set `JWT_SECRET` to a unique cryptographically random value of at least 32 bytes in every non-local environment. Never reuse the development fallback. Keep health details disabled in externally accessible environments.
