@@ -54,7 +54,7 @@ public class UpstreamUrlPolicy {
         }
 
         String path = uri.getRawPath() == null ? "" : uri.getRawPath();
-        if (path.contains("\\\\") || path.contains("%2e") || path.contains("%2E")) {
+        if (path.contains("\\") || path.contains("%2e") || path.contains("%2E")) {
             throw invalidDestination();
         }
 
