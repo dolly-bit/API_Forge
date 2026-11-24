@@ -77,6 +77,11 @@ class RoutingManagementIntegrationTest {
         assertEquals("GET", route.getBody().get("httpMethod").asText());
         assertEquals("/orders", route.getBody().get("upstreamPathPrefix").asText());
 
+        ResponseEntity<JsonNode> sameKeyDifferentMethod = post(
+                routesPath(applicationId, upstreamId),
+                Map.of("routeKey", "orders", "httpMethod", "POST"), ownerToken);
+        assertEquals(HttpStatus.CREATED, sameKeyDifferentMethod.getStatusCode());
+
         ResponseEntity<JsonNode> duplicate = post(
                 routesPath(applicationId, upstreamId),
                 Map.of("routeKey", "orders", "httpMethod", "GET"), ownerToken);
