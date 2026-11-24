@@ -1,5 +1,6 @@
 package com.apiforge.integration;
 
+import com.apiforge.apikey.ApiKeyService;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,9 @@ class AuthenticationIntegrationTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private ApiKeyService apiKeyService;
 
     @LocalServerPort
     private int port;
@@ -115,6 +119,12 @@ class AuthenticationIntegrationTest {
         String keyId = createdKey.getBody().get("id").asText();
         String plaintextKey = createdKey.getBody().get("apiKey").asText();
         assertTrue(plaintextKey.startsWith("af_live_"));
+        assertTrue(apiKeyService.isValid(plaintextKey), "A newly created active API key must validate");
+        assertFalse(apiKeyService.isValid("af_live_invalid-key"), "Unknown API keys must be rejected");
+        Boolean lastUsedRecorded = jdbcTemplate.queryForObject(
+                "SELECT last_used_at IS NOT NULL FROM api_keys WHERE id = ?",
+                Boolean.class, UUID.fromString(keyId));
+        assertTrue(lastUsedRecorded, "Successful validation must update last_used_at");
 
         String storedHash = jdbcTemplate.queryForObject(
                 "SELECT key_hash FROM api_keys WHERE id = ?",
@@ -142,6 +152,7 @@ class AuthenticationIntegrationTest {
         ResponseEntity<JsonNode> afterRevoke = get(
                 "/api/v1/applications/" + applicationId + "/keys", ownerToken);
         assertEquals("REVOKED", afterRevoke.getBody().get(0).get("status").asText());
+        assertFalse(apiKeyService.isValid(plaintextKey), "A revoked API key must no longer validate");
     }
 
     private String registerAndGetToken(String email, String displayName) {
